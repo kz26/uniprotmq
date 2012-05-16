@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load url from future %}
+{% block sidebar %}
+<p>Enter any combination of the following, one per line.</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Example (human)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>UniProt</td>
+            <td>A6NFL8</td>
+        </tr>
+        <tr>
+            <td>IPI</td>
+            <td>IPI00902653</td>
+        </tr>
+        <tr>
+            <td>RefSeq</td>
+            <td>NP_002341</td>
+        </tr>
+        <tr>
+            <td>Ensembl</td>
+            <td>ENSP00000354219</td>
+        </tr>
+        <tr>
+            <td>GeneID</td>
+            <td>12011</td>
+        </tr>
+        <tr>
+            <td>Gene name</td>
+            <td>MMP2</td>
+        </tr>
+        <tr>
+            <td>GI accession</td>
+            <td>GI:4758436</td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
+
+{% block content %}
+<form enctype="multipart/form-data" method="post">
+{% csrf_token %}
+{% if form.non_field_errors %}
+<ul class="errorlist">
+{% for e in form.non_field_errors %}
+<li><b>{{ e }}</b></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% for field in form %}
+<label for="{{ field.auto_id }}">{{ field.label }}
+{{ field.errors }}
+{{ field }}
+</label>
+{% endfor %}
+<br />
+<input type="submit" class="btn btn-primary" value="Search" />
+</form>
+{% endblock %}
