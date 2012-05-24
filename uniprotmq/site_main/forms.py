@@ -4,9 +4,9 @@ from django.conf import settings
 OUTPUT_FIELDS = (
     ('uniprot_name', 'UniProt name'),
     ('uniprot_acc', 'UniProt accession'),
-    ('IPI', 'IPI ID'),
-    ('Ensembl', 'Ensembl'),
     ('RefSeq', 'RefSeq'),
+    ('Ensembl', 'Ensembl'),
+    ('IPI', 'IPI ID'),
     ('GeneID', 'GeneID'),
     ('gene_name', 'Gene name'),
     ('GI', 'GI accession'),
