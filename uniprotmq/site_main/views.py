@@ -44,23 +44,24 @@ def search(request):
                     else:
                         for n in dbi.session.query(IDMapping.id).filter(IDMapping.resource == idt).filter(IDMapping.value == l):
                             up_names.append(n.id)
+                    
+                    if up_names:
+                        q_idm = dbi.session.query(IDMapping).filter(IDMapping.id.in_(up_names))
+                        for x in q_idm:
+                            if x.resource in results:
+                                results[x.resource].append(x.value)
 
-                    q_idm = dbi.session.query(IDMapping).filter(IDMapping.id.in_(up_names))
-                    for x in q_idm:
-                        if x.resource in results:
-                            results[x.resource].append(x.value)
+                        if 'description' in results:
+                            q_e = dbi.session.query(Entry).filter(Entry.id.in_(up_names))
+                            for x in q_e:
+                                if x.description:
+                                    results['description'].append(x.description)
 
-                    if 'description' in results:
-                        q_e = dbi.session.query(Entry).filter(Entry.id.in_(up_names))
-                        for x in q_e:
-                            if x.description:
-                                results['description'].append(x.description)
-
-                    if idt == 'uniprot_acc' and len(up_names) > 1:
-                        line[0] = "%s (DEMERGED)" % (l)
-                    else:
-                        for f in form.cleaned_data['outputs']:
-                            line.append("|".join(set(results[f])))
+                        if idt == 'uniprot_acc' and len(up_names) > 1:
+                            line[0] = "%s (DEMERGED)" % (l)
+                        else:
+                            for f in form.cleaned_data['outputs']:
+                                line.append("|".join(set(results[f])))
                 except:
                     pass 
                 response.write("\t".join(line) + "\n")

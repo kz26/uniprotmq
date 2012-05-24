@@ -174,5 +174,5 @@ MYDB_USERNAME = 'admin'
 MYDB_PASSWORD = ''
 MYDB_PORT = 5432
 MYDB_NAMES = ('uniprot_human', 'uniprot_rodents')
-MYDB_ECHO = True
+MYDB_ECHO = False
 
