@@ -67,7 +67,7 @@ STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+STATIC_URL = '/uniprotmq/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -173,6 +173,10 @@ MYDB_HOSTNAME = 'localhost'
 MYDB_USERNAME = 'admin'
 MYDB_PASSWORD = ''
 MYDB_PORT = 5432
-MYDB_NAMES = ('uniprot_human', 'uniprot_rodents')
+MYDB_NAMES = ('uniprot_human', 'uniprot_mouse')
 MYDB_ECHO = False
 
+try:
+    from local_settings import *
+except:
+    pass

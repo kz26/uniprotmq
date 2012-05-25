@@ -2,9 +2,10 @@
 # reads a DAT file and prints out it in a db-friendly format
 
 import datparser
-
+import re
 import sys
 
+UNIPROT_NAME_PAT = re.compile("^[A-Z0-9]+_([A-Z]+)$")
 # a handy line-printing class
 class LinePrinter:
     def __init__(self, n):
@@ -23,27 +24,30 @@ class LinePrinter:
 
 out = open(sys.argv[2], 'w')
 out_desc = open(sys.argv[3], 'w')
+species = sys.argv[4:]
 
 for p in datparser.read_dat(sys.argv[1]):
-    printer = LinePrinter(p['ID'][0])
-    # the ID line / entry name
-    printer.println(out, 'uniprot_name', printer.n, 1)
+    un_match = UNIPROT_NAME_PAT.search(p['ID'][0])
+    if (un_match and species and un_match.group(1) in species) or not species:
+        printer = LinePrinter(p['ID'][0])
+        # the ID line / entry name
+        printer.println(out, 'uniprot_name', printer.n, 1)
 
-    # accession numbers
-    printer.printlist_fp(out, 'uniprot_acc', p['AC'])
+        # accession numbers
+        printer.printlist_fp(out, 'uniprot_acc', p['AC'])
 
-    # description
-    printer.println_simple(out_desc, p['DE'][0])
+        # description
+        printer.println_simple(out_desc, p['DE'][0])
     
-    # gene names
-    if 'GN' in p:
-        printer.printlist_fp(out, 'gene_name', p['GN'])
+        # gene names
+        if 'GN' in p:
+            printer.printlist_fp(out, 'gene_name', p['GN'])
     
-    # cross-refs
-    if 'DR' in p:
-        for x in p['DR']:
-            res = x[0]
-            if res == 'Ensembl':
-                printer.println(out, res, x[2])
-            elif res in ['GeneID', 'IPI', 'RefSeq']:
-                printer.println(out, res, x[1])
+        # cross-refs
+        if 'DR' in p:
+            for x in p['DR']:
+                res = x[0]
+                if res == 'Ensembl':
+                    printer.println(out, res, x[2])
+                elif res in ['GeneID', 'IPI', 'RefSeq']:
+                    printer.println(out, res, x[1])
